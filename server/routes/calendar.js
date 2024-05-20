@@ -1,14 +1,14 @@
 //วันเริ่มต้น สิ้นสุดปี ปีเทอม
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
 const {
-    createCalendar,
-    readAllCalendars,
-    readCalendar,
-    readCalendarBydate,
-    updateCalendar,
-    deleteCalendar
+  createCalendar,
+  readAllCalendars,
+  readCalendar,
+  readCalendarBydate,
+  updateCalendar,
+  deleteCalendar,
 } = require("../controllers/calendar");
 
 router.post("/calendar", createCalendar);

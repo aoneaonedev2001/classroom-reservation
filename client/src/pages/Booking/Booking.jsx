@@ -2,14 +2,14 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchCurrentYearTerm } from "../../redux/authSlice";
 
-import { useNavigate,useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 // Function
 import { readCoursesByLecturer } from "../../api/courseApi";
 import "./Booking.css";
 
 const Booking = () => {
   const navigate = useNavigate();
-  const Location=useLocation();
+  const Location = useLocation();
   //console.log(Location.pathname);
 
   const dispatch = useDispatch();
@@ -46,9 +46,9 @@ const Booking = () => {
 
   return (
     <>
-     {Location.pathname ==="/user/index" ? null :
-     <h1 className="big-title text-center">จองห้องเรียน</h1>
-     }
+      {Location.pathname === "/user/index" ? null : (
+        <h1 className="big-title text-center">จองห้องเรียน</h1>
+      )}
       <div className="container-main">
         <div className="d-flex justify-content-start align-items-center">
           <h3 className="title-custom mt-5 mb-3">
