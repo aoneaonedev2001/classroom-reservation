@@ -1,0 +1,15 @@
+.show-hid-600px{
+  display: none;
+}
+
+@media screen and (max-width: 600px) {
+ 
+  .show-hid-600px{
+    display:inline-block;
+  }
+  .hid-600px{
+    display:none;
+  }
+
+
+}

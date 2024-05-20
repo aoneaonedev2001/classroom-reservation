@@ -1,0 +1,30 @@
+.title3-custom {
+    font-weight: 400; 
+    font-size: 1.2rem;
+    color: #222222;
+  }
+
+@media screen and (max-width: 600px){
+    input {
+        border: 1px solid #AAAAAA;
+        height: 43px;
+        /* width: 220px; */
+        width: 50%;
+    }
+    .title3-custom{
+        width: 40%;
+        font-size: 1.0rem;
+    }
+    .btn-manage2 {
+        height: 80px;
+        font-size: 11px;
+        
+    }
+    .submit{
+        justify-content: center;
+    }
+    
+}
+
+
+
