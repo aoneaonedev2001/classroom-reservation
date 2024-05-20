@@ -1,0 +1,156 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+  margin-bottom: 45px;
+}
+.navbar li{
+  list-style: none;
+  
+}
+.navbar-left {
+  padding: 0.5rem;
+  margin: 0 0.5rem;
+  margin-left: 70px;
+}
+
+.Navlogin{
+  margin-right: 100px;
+}
+
+ul{
+  gap: 38px;
+  margin-right: 100px;
+  display: flex;
+}
+ul.collapsed{
+  margin-bottom: 0;
+}
+
+/* ------------------------------------  dropdown ----------------------------------*/
+
+/* custome ของ bootstap */
+.dropdown-menu.show {
+  width: 190px;
+  display: none;
+  background-color: #FFFFFF;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  border: none;
+}
+
+.dropdown-menu.show li {
+  margin-top: 10px;
+}
+
+.dropdown-menu.show a:hover {
+  background-color: #3f9bf0;
+  color: #ffffff;
+  transition: 0.1s; 
+}
+
+/*------------------------------------------------  hover ต่างๆ ------------------------------------ */
+
+.navbar ul .active {
+  color: #3f9bf0;
+}
+
+/*------------------------------------------------  Menu icon -----------------------------------------------*/
+
+.icons {
+  color: #000000;
+  font-size: 20px;
+  margin-right: 5px;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+  /* hamberger menu */
+.menu-responsive {
+  color: #000000;
+  font-size: 30px;
+  display: none;
+  margin-top: 5px; 
+}
+
+/*------------------------------------------------  Responsive Navbar ------------------------------------ */
+
+@media screen and (max-width: 1030px) {
+  
+.navbar {
+  height: auto;
+  display: flex;
+  padding-top: 1em;  
+}
+
+.menu-responsive {
+  display:inline-block;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+
+}
+ul.collapsed{
+  display: none;
+  width: 100vw;
+
+  &.is-expanded{
+    display: block;
+  }
+  
+}
+
+li{
+border-top: 1px solid #ccc;
+padding: 0.8em;
+transition: 0.3s;
+  &:hover{
+    background-color: #3f9bf0;
+    color: #ffffff;
+  }
+}
+
+ul{
+  margin-right: 0px;
+}
+li {
+  text-align: start;
+}
+.is-expanded {
+padding-left: 0px;
+}
+
+
+.navbar-left {
+  margin-left: 5px;
+}
+
+.Navlogin{
+  margin-right: 30px;
+}
+
+.dropdown-menu.show  {
+  padding: 0px; 
+}
+.dropdown-menu.show li {
+  margin-top: 0px;
+  padding: 4px;
+}
+  
+}
+
+@media screen and (max-width: 1200px) {
+
+  ul{
+    margin-right: 20px;
+    margin-right: 90px;
+  }
+  .navbar-left {
+    padding: 0.5rem;
+    margin: 0 0.5rem;
+    margin-left: 20px;
+}
+
+}
+

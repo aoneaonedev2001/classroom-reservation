@@ -1,0 +1,59 @@
+
+.big-title-custome {
+  font-weight: 500;
+  font-size: 3.3rem;
+  line-height: 4rem;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.select-custom2{
+  border: 1px solid #aaaaaa;
+  height: 35px;
+  width: 180px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+  border-radius: 5px;
+ 
+}
+
+
+/*-------------- Custom FullCalendar  นาฬิกา ------------------*/
+/* สีปุ่มต่างๆ */
+.fc .fc-button-primary {
+  background-color: #2c3e50;
+  border-color: #AAAAAA;
+  color: var(--fc-button-text-color);
+}
+
+/* เวลา active-hover สีปุ่มต่างๆ */
+.fc .fc-button-primary:not(:disabled).fc-button-active, .fc .fc-button-primary:not(:disabled):active {
+  background-color: #3F9BF0;
+  border-color: #AAAAAA;
+  color: var(--fc-button-text-color);
+}
+
+/* ป้าย today */
+.fc .fc-button-primary:disabled {
+  background-color: #2c3e50;;
+  border-color: var(--fc-button-border-color);
+  color: var(--fc-button-text-color);
+}
+
+
+
+
+/*-------------------------------- Responsive --------------------------------- */
+
+@media screen and (max-width: 600px) {
+  .big-title-custome {
+    font-size: 2.3rem;
+    line-height: 3rem;
+  }
+
+  .select-custom2 {
+    height: 30px;
+    width: 105px;
+  }
+
+ 
+}

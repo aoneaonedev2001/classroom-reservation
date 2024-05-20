@@ -1,0 +1,63 @@
+
+.btn-custom-importfile {
+  margin-top: 71px;
+  margin-bottom: 38px;
+  width: 248px;
+  height: 66px;
+  color: #ffffff;
+  background-color: #3f9bf0;
+  border-radius: 10px;
+  font-size: 40px;
+  cursor: pointer;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+  border: none;
+}
+p {
+  color: #818181;
+  text-align: center;
+}
+.importfile {
+  height: 13rem;
+  width: 100%;
+  border: 2px dashed #d4d4d4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 2.6rem;
+  position: relative;
+  border-radius: 2px;
+}
+.decs{
+  font-size: 32px;
+  color: #818181;
+  font-weight: 300;
+  
+}
+
+/*--------------------------------Custom-modal -------------------- */
+
+.titleModal2{
+  font-size: 1.8rem;
+  margin-bottom: 25px;
+  }
+  .container-modal{
+    padding: 0 1rem;
+    max-height: 550px;  
+    overflow-y: auto;
+  }
+  .custom-modal .modal-dialog {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    margin-top: 80px;
+  }
+
+  @media screen and (max-width: 600px) {
+    .container-modal{
+      padding: 0 0rem;
+      max-height: 420px; 
+    }
+  
+  }
+  
