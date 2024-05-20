@@ -4,7 +4,7 @@ const db = require("../db");
 
 //----register
 exports.register = async (req, res) => {
-  const { user_id,  password, user_name, role = "user" } = req.body;
+  const { user_id, password, user_name, role = "user" } = req.body;
 
   db.query(
     "SELECT * FROM users WHERE user_id = ?",
@@ -22,7 +22,7 @@ exports.register = async (req, res) => {
 
         db.query(
           "INSERT INTO Users SET ?",
-          { user_id: user_id,  password: hashedPassword, user_name, role: role },
+          { user_id: user_id, password: hashedPassword, user_name, role: role },
           (error, results) => {
             if (error) {
               return res.status(500).json({ error });
@@ -58,16 +58,21 @@ exports.login = async (req, res) => {
         } else {
           const payload = {
             user: {
-              userId: user.user_id,  // เเก้ username: user.user_id,
+              userId: user.user_id, // เเก้ username: user.user_id,
               userName: user.user_name,
               role: user.role,
             },
           };
 
-          jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
-            if (err) throw err;
-            res.json({ token, payload });
-          });
+          jwt.sign(
+            payload,
+            process.env.JWT_SECRET,
+            { expiresIn: 3600 },
+            (err, token) => {
+              if (err) throw err;
+              res.json({ token, payload });
+            }
+          );
         }
       }
     }
@@ -91,7 +96,7 @@ exports.currentUser = async (req, res) => {
 
       // We select the first (and should be only) user from the results
       const user = results[0];
-      
+
       // We remove the password from the user object before sending it
       delete user.password;
 
