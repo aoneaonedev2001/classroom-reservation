@@ -7,6 +7,17 @@
   text-align: center;
 }
 
+.big-title-custome2 {
+  font-weight: 500;
+  font-size: 2.8rem;
+  line-height: 4rem;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+
+
+
 .select-custom2{
   border: 1px solid #aaaaaa;
   height: 35px;
@@ -46,6 +57,11 @@
 
 @media screen and (max-width: 600px) {
   .big-title-custome {
+    font-size: 2.3rem;
+    line-height: 3rem;
+  }
+
+  .big-title-custome2 {
     font-size: 2.3rem;
     line-height: 3rem;
   }

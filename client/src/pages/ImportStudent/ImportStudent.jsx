@@ -9,7 +9,7 @@ import{importStudent} from "../../api/importExcelApi"
 import './ImportStudent.css'
 //Ant เเจ้ง Alert
 import { message } from 'antd';
-
+import ImgExampleAllStudent from  '../../img/AllStudentExample.png'
 
 
 const ImportStudent = () => {
@@ -18,6 +18,11 @@ const ImportStudent = () => {
   const [showModal, setShowModal] = useState(false);
   const handleModalClose = () => setShowModal(false);
   const handleModalShow = () => setShowModal(true);
+
+   //module  Example Data exccel
+   const [showModalExample, setShowModalExample] = useState(false);
+   const handleModalExampleClose = () => setShowModalExample(false);
+   const handleModalExampleShow = () => setShowModalExample(true);
   
   //สาขายังไม่มี
   const [major_id,setMajor_id] = useState("2519");
@@ -42,7 +47,7 @@ const ImportStudent = () => {
   .then((res)=>{
     
     //alert("Import Student Success");
-    message.loading("Loading...", 2.0).then(()=>message.success('Import Student Success', 2.5)); 
+    message.loading("Loading...", 2.0).then(()=>message.success('Import นักเรียนสำเร็จ', 2.5)); 
     handleModalClose();
   })
   .catch((error) => {
@@ -122,6 +127,7 @@ const ImportStudent = () => {
     <div className="container-main-noborder">
       <h1 className="big-title mb-5">Import ข้อมูลนักศึกษาใหม่</h1>
       <p>โปรดเลือก Excel File ที่ท่านต้องการ Import</p>
+      <p>*ระบบรองรับเฉพาะไฟล์ XLSX <span onClick={()=>handleModalExampleShow()} style={{color:"#3F9BF0",cursor:"pointer"}}>ดูตัวอย่าง</span> </p>
       <div className="importfile" {...getRootProps()}>
         <input {...getInputProps()} className="hidden-input" />
         <button className="btn-custom-importfile">เรียกดูไฟล์</button>
@@ -172,6 +178,25 @@ const ImportStudent = () => {
             Close
           </Button>
           <Button variant="primary" onClick={handleSubmit} >บันทึกข้อมูล</Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal Example Data */}
+      <Modal show={showModalExample} onHide={handleModalExampleClose} className="custom-modal">
+        <Modal.Header closeButton>
+          <Modal.Title className="text-center w-100">
+            <h3 className="big-title">Example File</h3>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="container-modal text-center">
+             <img src={ImgExampleAllStudent }  alt="" className="" />
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="d-flex justify-content-center w-100">
+          <Button variant="secondary" onClick={handleModalExampleClose}>
+            Close
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>

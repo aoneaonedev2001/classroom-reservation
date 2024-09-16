@@ -7,6 +7,9 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import thLocale from '@fullcalendar/core/locales/th';  // Import ภาษาไทย
+import tippy from "tippy.js"; // Import tippy.js
+import "tippy.js/dist/tippy.css"; // Import tippy.js styles
 import {
   readreservationByRoomid,
   readuseRoomByRoomidYereTerm,
@@ -111,7 +114,9 @@ const MyCalendar = () => {
                   title: item.subj_code,
                   start: date,
                   allDay: true,
-                  color: item.time === "AM" ? "#3F9BF0" : "#FF6F00",
+                  color: item.time === "AM" ? "#3F9BF0" : "#F07857",
+                  time: item.time, // Add time property for tooltips
+                  isReservation: false, // For regular schedule
                 };
               });
 
@@ -127,16 +132,16 @@ const MyCalendar = () => {
               const convertedEventsFromReservation = res.data.map(
                 (reservation) => {
                   return {
-                    title:
-                      reservation.user_name +
-                      " " +
-                      reservation.reservation_time,
+                    title:reservation.user_name + " " + reservation.reservation_time,
                     start: reservation.reservation_date,
                     allDay: true,
                     color:
-                      reservation.reservation_time === "AM"
-                        ? "#5cf74e"
-                        : "#5cf74e",
+                    reservation.reservation_time === "AM"
+                        ? "#4FB06D"
+                        : "#4FB06D",
+                    time: reservation.reservation_time, // Keep track of AM or PM
+                    isReservation: true, // Identify this as a general reservation
+                    
                   };
                 }
               );
@@ -155,9 +160,43 @@ const MyCalendar = () => {
     }
   }, [user, room_id, findYearTerm]);
 
+  // Tooltip function for hover effect
+  const handleEventMouseEnter = (info) => {
+    let tooltipContent = "";
+
+    if (info.event.extendedProps.isReservation) {
+      // If it's a general room reservation
+      tooltipContent =
+        info.event.extendedProps.time === "AM"
+          ? "จองห้องเพิ่มเติมช่วงเช้า"
+          : "จองห้องเพิ่มเติมช่วงบ่าย";
+    } else {
+      // If it's a regular schedule
+      tooltipContent =
+        info.event.extendedProps.time === "AM"
+          ? "ช่วงเช้า"
+          : "ช่วงบ่าย";
+    }
+
+    tippy(info.el, {
+      content: tooltipContent,
+      placement: "top",
+      arrow: true,
+    });
+  };
+
   return (
     <>
-      <h1 className="big-title-custome text-center">ปฏิทินการใช้ห้อง</h1>
+      <h1 className="big-title-custome2 text-center">ปฏิทินการใช้ห้องปี
+      <span className="editspan">
+              {" "}
+              {findYearTerm ? findYearTerm.Years : ""}{" "}
+            </span>
+            ภาคการศึกษาที่ :{" "}
+            <span className="editspan">
+              {findYearTerm ? findYearTerm.Term : ""}
+            </span>
+      </h1>
       <div className="container-main-noborder">
         <h3 className="title ms-3">ค้นหาห้อง</h3>
 
@@ -200,11 +239,18 @@ const MyCalendar = () => {
             </div>
           </div>
         </div>
-        <h3 className="title ms-3 mb-2">
-          ห้อง :<span className="editspan"> {room_id}</span>
-        </h3>
+
+        <div className="d-flex  ">
+          <h3 className="title ms-3 mb-2">
+            ห้อง :<span className="editspan"> {room_id}</span>
+          </h3>
+          {/* <h3 className="title ms-3 mb-2" onClick={()=>handleModalExampleShow()} style={{color:"#3F9BF0",cursor:"pointer"}}>
+            ดูตัวอย่าง
+          </h3> */}
+        </div>
         <div className="container-main mb-5">
           <FullCalendar
+            locale={thLocale}  // ตั้งค่าภาษาไทย
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             headerToolbar={{
               left: "prev,next today",
@@ -212,6 +258,7 @@ const MyCalendar = () => {
               right: "dayGridMonth,timeGridWeek,timeGridDay",
             }}
             events={events}
+            eventMouseEnter={handleEventMouseEnter} // Add eventMouseEnter handler
           />
         </div>
       </div>

@@ -66,7 +66,7 @@ const handleSubmit = async (e) => {
     });
 };
 
-
+ 
 
 
 //------------------------------------------readAllYearsTerm and loadData---------------------------------
@@ -132,6 +132,13 @@ const handleSubmit = async (e) => {
     }
   };
 
+  const formatDateWithBuddhistEra = (date) => {
+    return moment(date)
+      .locale("th")
+      .add(543, "years") // เพิ่ม 543 ปีเพื่อให้เป็นปีพุทธศักราช
+      .format("LL");
+  };
+
   return (
     <div className="container-main-noborder">
       <h3 className='big-title py-3'>จัดการข้อมูล</h3>
@@ -166,8 +173,8 @@ const handleSubmit = async (e) => {
             <tr key={index}>
               <td className="titleTd text-center">{item.Years}</td>
               <td className="titleTd text-center">{item.Term}</td>
-              <td className="titleTd text-center">{moment(item.date_begin).locale('th').format('LL')}</td>
-              <td className="titleTd text-center">{moment(item.date_end).locale('th').format('LL')}</td>
+              <td className="titleTd text-center">{formatDateWithBuddhistEra(item.date_begin)}</td>
+              <td className="titleTd text-center">{formatDateWithBuddhistEra(item.date_end)}</td>
               <td className="text-center">
                 <button className="btn-edit me-3" onClick={() => showEditModal(item)}>
                   <FaRegEdit /> เเก้ไข
