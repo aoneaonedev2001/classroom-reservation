@@ -17,19 +17,21 @@ const HomeAdmin = () => {
   //------------------------------------------readAllCourse and loadData---------------------------------
   const [data, setData] = useState([]);
   const loadData = async (authtoken) => {
-    const value = {
-      years: findYearTerm.Years,
-      term: findYearTerm.Term,
-    };
+    if (findYearTerm) {
+      const value = {
+        years: findYearTerm.Years,
+        term: findYearTerm.Term,
+      };
 
-    readCoursesByYereTerm(authtoken, value)
-      .then((res) => {
-        setData(res.data);
-        //console.log(data);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-      });
+      readCoursesByYereTerm(authtoken, value)
+        .then((res) => {
+          setData(res.data);
+          //console.log(data);
+        })
+        .catch((err) => {
+          console.log(err.response.data);
+        });
+    }
   };
 
   useEffect(() => {
@@ -39,17 +41,23 @@ const HomeAdmin = () => {
   return (
     <div className="container-main-noborder">
       <h3 className="big-title py-3">ข้อมูลวิชาปีเทอมปัจจุบัน</h3>
-      <h3 className="title-custom mt-5 mb-3">
-        ข้อมูลวิชาปีการศึกษา :{" "}
-        <span className="editspan">
-          {" "}
-          {findYearTerm ? findYearTerm.Years : ""}{" "}
-        </span>
-        ภาคการศึกษาที่ :{" "}
-        <span className="editspan">
-          {findYearTerm ? findYearTerm.Term : ""}
-        </span>
-      </h3>
+      {findYearTerm ? (
+        <h3 className="title-custom mt-5 mb-3">
+          ข้อมูลวิชาปีการศึกษา :{" "}
+          <span className="editspan">
+            {" "}
+            {findYearTerm ? findYearTerm.Years : ""}{" "}
+          </span>
+          ภาคการศึกษาที่ :{" "}
+          <span className="editspan">
+            {findYearTerm ? findYearTerm.Term : ""}
+          </span>
+        </h3>
+      ) : (
+        <h3 className="title-custom mt-5 mb-3">
+          ไม่มีข้อมูลปีการศึกษาที่ตรงช่วงเวลานี้
+        </h3>
+      )}
 
       <div className="py-2 " style={{ maxHeight: "500px", overflowY: "auto" }}>
         <table className="table table-bordered shadow custom-table ">
@@ -96,6 +104,8 @@ const HomeAdmin = () => {
             ))}
           </tbody>
         </table>
+        {data? null :<h3 className="title-custom mt-5 mb-3 text-center"> ไม่มีข้อมูล</h3>}
+        
       </div>
     </div>
   );

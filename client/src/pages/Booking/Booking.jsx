@@ -21,7 +21,8 @@ const Booking = () => {
   useEffect(() => {
     dispatch(fetchCurrentYearTerm());
   }, [dispatch]);
-
+  
+  
   useEffect(() => {
     if (user && findYearTerm) {
       const value = {

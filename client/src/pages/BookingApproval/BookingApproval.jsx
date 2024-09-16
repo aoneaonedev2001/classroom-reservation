@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import {
   readAllreservation,
@@ -6,11 +6,14 @@ import {
 } from "../../api/reservationApi";
 import { readAllYearsTerm } from "../../api/years_termApi";
 import { Modal, Button } from "react-bootstrap";
-import { PDFDownloadLink } from "@react-pdf/renderer"; //print(PDFDownloadLink)
-import ReservationformPDF from "../../components/ReservationformPDF/ReservationformPDF";
 import "./BookingApproval.css";
 import moment from "moment";
 import "moment/locale/th";
+import { useReactToPrint } from "react-to-print";
+import ReactToPrint from 'react-to-print';
+import ReservationformPDF from "../../components/ReservationformPDF/ReservationformPDF";
+
+
 
 const BookingApproval = () => {
   const user = useSelector((state) => state.auth.user);
@@ -72,6 +75,20 @@ const BookingApproval = () => {
     setSelectedItem(item);
     handleModalShow();
   };
+
+ //--------PDF dowlond
+ const componentRef = useRef();
+ const handlePrint = useReactToPrint({
+  content: () => componentRef.current
+});
+
+const formatDateWithBuddhistEra = (date) => {
+  return moment(date)
+    .locale("th")
+    .add(543, "years") // เพิ่ม 543 ปีเพื่อให้เป็นปีพุทธศักราช
+    .format("LL");
+};
+
 
   return (
     <>
@@ -143,7 +160,7 @@ const BookingApproval = () => {
                   {/* จะซ้อนที่ขนาดหน้าจอ มือถือ */}
                   <td className="hid-600px text-center">
                     <h3 className="titleTd">
-                      {moment(item.reservation_date).locale("th").format("LL")}
+                      {formatDateWithBuddhistEra(item.reservation_date)}
                     </h3>
                   </td>
                   <td className="hid-600px text-center">
@@ -241,19 +258,10 @@ const BookingApproval = () => {
               Close
             </Button>
             {/*Print PDF */}
-            <PDFDownloadLink
-              document={
-                <ReservationformPDF
-                  selectedItem={selectedItem}
-                  faculty={faculty}
-                  major_name={major_name}
-                />
-              } // ส่งข้อมูล selectedItem เข้าไปใน PDF
-              fileName="reservation-formtest2.pdf"
-              className="btn btn-primary m-1"
-            >
-              พิมพ์ใบจองห้อง
-            </PDFDownloadLink>
+            <ReactToPrint
+            trigger={() => <Button className="btn btn-primary m-1">พิมพ์ใบจองห้อง</Button>}
+            content={() => componentRef.current}
+          />
           </Modal.Footer>
         </Modal>
 
@@ -261,8 +269,20 @@ const BookingApproval = () => {
           <div className="col"></div>
         </div>
       </div>
+
+      <div style={{ display: 'none' }}>
+        <ReservationformPDF
+          ref={componentRef}
+          selectedItem={selectedItem}
+          faculty={faculty}
+          major_name={major_name}
+        />
+      </div>
+
     </>
   );
 };
+
+
 
 export default BookingApproval;
