@@ -26,29 +26,26 @@ const styles = StyleSheet.create({
   },
 });
 
-const ReservationformPDF = ({ selectedItem, faculty, major_name}) => {
-    
+const ReservationformPDF = React.forwardRef(({ selectedItem, faculty, major_name }, ref) => {
+
+  //console.log("selectedItem",selectedIte?.user_name);
+
   return (
-    <Document>
-      <Page size="A4" style={styles.page}>
-        <View style={styles.section}>
-          <Text>แบบฟอร์มขอใช้ห้องเรียน</Text>
-          <Text>ห้อง: {selectedItem.room_id}</Text>
-          <Text>ผู้จอง: อาจารย์ {selectedItem.user_name} สาขาวิชา: {major_name } คณะ: {faculty} </Text>
-          <Text>มหาวิทยาลัยราชภัฏสวนสุนันทา   เบอร์โทรศัพท์ที่ติดต่อได้:  </Text>
-          <Text>จำนวนผู้ใช้ห้อง {selectedItem.capacity} คน</Text>
-          <Text>วันที่ขอใช้ห้อง: {moment(selectedItem.reservation_date).format('LL')} เวลา:{selectedItem.reservation_time === "AM" ? "08:00 - 12:00" : "12:00 - 18:00"} </Text>
-          <Text>มีความประสงค์ใช้ห้องเพื่อ:การเรียนการสอนรายวิชา  </Text>
-          <Text>ลงชื่อ: {selectedItem.user_name} ผู้จอง</Text>
-          <Text>เรียน รองคณบดีฝ่ายบริหาร เพื่อโปรดพิจารณา</Text>
-          <Text>ลงชื่อ: {selectedItem.user_name} เจ้าหน้าที่</Text>
-          <Text>.......................</Text>
-          <Text>รองคณบดีฝ่ายบริหาร</Text>
-          
-        </View>
-      </Page>
-    </Document>
+    <div ref={ref} style={{ padding: '10px', fontFamily: 'Sarabun' }}>
+      <h2>แบบฟอร์มขอใช้ห้องเรียน</h2>
+      <p>ห้อง: {selectedItem?.room_id}</p>
+      <p>ผู้จอง: อาจารย์ {selectedItem?.user_name} สาขาวิชา: {major_name} คณะ: {faculty}</p>
+      <p>มหาวิทยาลัยราชภัฏสวนสุนันทา เบอร์โทรศัพท์ที่ติดต่อได้:</p>
+      <p>จำนวนผู้ใช้ห้อง {selectedItem?.capacity} คน</p>
+      <p>วันที่ขอใช้ห้อง: {moment(selectedItem?.reservation_date).format('LL')} เวลา: {selectedItem?.reservation_time === "AM" ? "08:00 - 12:00" : "12:00 - 18:00"}</p>
+      <p>มีความประสงค์ใช้ห้องเพื่อ: การเรียนการสอนรายวิชา</p>
+      <p>ลงชื่อ: {selectedItem?.user_name} ผู้จอง</p>
+      <p>เรียน รองคณบดีฝ่ายบริหาร เพื่อโปรดพิจารณา</p>
+      <p>ลงชื่อ: {selectedItem?.user_name} เจ้าหน้าที่</p>
+      <p>.......................</p>
+      <p>รองคณบดีฝ่ายบริหาร</p>
+    </div>
   );
-};
+});
 
 export default ReservationformPDF;

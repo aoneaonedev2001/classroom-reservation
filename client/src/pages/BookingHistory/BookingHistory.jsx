@@ -38,6 +38,13 @@ const BookingHistory = () => {
     }
   };
 
+  const formatDateWithBuddhistEra = (date) => {
+    return moment(date)
+      .locale("th")
+      .add(543, "years") // เพิ่ม 543 ปีเพื่อให้เป็นปีพุทธศักราช
+      .format("LL");
+  };
+
   return (
     <>
       <h1 className="big-title">ประวัติการจองห้องเรียน</h1>
@@ -74,7 +81,7 @@ const BookingHistory = () => {
                     {item.subj_code} {item.subj_name}
                   </td>
                   <td className="titleTd text-center">
-                    {moment(item.reservation_date).locale("th").format("LL")}
+                    {formatDateWithBuddhistEra(item.reservation_date)}
                   </td>
                   <td className="titleTd text-center">
                     {item.reservation_time === "AM"
