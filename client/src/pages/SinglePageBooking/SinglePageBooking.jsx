@@ -48,7 +48,7 @@ const SinglePageBooking = () => {
         message.warning("วันที่สิ้นสุดต้องอยู่ในช่วงปีการศึกษาที่ถูกต้อง");
         return;
       }
- 
+   
     const value = {
       course_id:ID,
       lect_id: user.userId,
@@ -58,6 +58,8 @@ const SinglePageBooking = () => {
       year:findYearTerm.Years,
       term:findYearTerm.Term
     }
+    console.log(value);
+    
 
      findDayTime(user.token, value)
       .then((res) => {
