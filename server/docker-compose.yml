@@ -3,42 +3,50 @@ services:
     image: mysql:9.0
     container_name: mysql_container
     environment:
-      MYSQL_ROOT_PASSWORD: Zx0830248638za
-      MYSQL_DATABASE: classroom-reservation-system
+      MYSQL_ROOT_PASSWORD: Zx0830248638za  # รหัสผ่านสำหรับ root user ของ MySQL
+      MYSQL_DATABASE: classroom-reservation-system  # ชื่อฐานข้อมูลที่ต้องการสร้าง
     ports:
-      - "3307:3306"                      # เข้าถึง Mysql ที่พอร์ต 3307 ในเครื่อง บนhostt aws เป็น 3306
-    volumes:                             # auto Update databas in com
-      - db_data:/var/lib/mysql
+      - "3307:3306"  # เข้าถึง MySQL ใน container ผ่านพอร์ต 3307 บน host ซึ่ง map ไปที่พอร์ต 3306 ภายใน container
+    volumes:
+      - db_data:/var/lib/mysql  # เชื่อมต่อโฟลเดอร์ของ container กับโฟลเดอร์บนเครื่อง host เพื่อเก็บข้อมูล database
+
+    # เพิ่ม healthcheck เพื่อตรวจสอบสถานะการทำงานของ MySQL
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]  # ตรวจสอบว่า MySQL พร้อมให้ใช้งานหรือไม่
+      interval: 10s  # ตรวจสอบทุก ๆ 10 วินาที
+      timeout: 5s  # หากไม่ได้รับการตอบกลับภายใน 5 วินาทีให้ถือว่าล้มเหลว
+      retries: 3  # ลองใหม่ 3 ครั้งก่อนจะถือว่า container ล้มเหลว
 
   app:
-    build: .
+    build: .  # สร้าง image จากไฟล์ Dockerfile ในโฟลเดอร์ปัจจุบัน
     container_name: nodejs_container
     environment:
-      DB_HOST: db
-      DB_USER: root
-      DB_PASS: Zx0830248638za
-      DB_DATABASE: classroom-reservation-system
-      DB_PORT: 3306
-      JWT_SECRET: jwtSecret
-      PORT: 8000
+      DB_HOST: db  # ตั้งค่า host ของฐานข้อมูลเป็นชื่อ service "db"
+      DB_USER: root  # ตั้งค่า user สำหรับการเชื่อมต่อฐานข้อมูล
+      DB_PASS: Zx0830248638za  # ตั้งค่ารหัสผ่านสำหรับการเชื่อมต่อฐานข้อมูล
+      DB_DATABASE: classroom-reservation-system  # ชื่อฐานข้อมูลที่ต้องเชื่อมต่อ
+      DB_PORT: 3306  # พอร์ตที่ MySQL ใช้ (ใน container)
+      JWT_SECRET: jwtSecret  # ตั้งค่า secret สำหรับการใช้ JWT
+      PORT: 8000  # พอร์ตที่แอป Node.js จะรัน
     ports:
-      - "8000:8000"                  # เข้าถึง NodeJs ที่พอร์ต 8080
+      - "8000:8000"  # เชื่อมต่อพอร์ต 8000 บน host กับพอร์ต 8000 ใน container สำหรับ Node.js
     depends_on:
-      - db
-    volumes:                       # auto Update code
-    - .:/app   
-    command: ["node", "server.js"]  
+      db:
+        condition: service_healthy  # ขึ้นอยู่กับ container "db" และรันเมื่อ MySQL พร้อมแล้ว (ผ่าน healthcheck)
+    volumes:
+      - .:/app  # เชื่อมต่อโฟลเดอร์ปัจจุบันบน host กับโฟลเดอร์ "/app" ใน container เพื่อให้สามารถ update โค้ดได้อัตโนมัติ
+    command: ["node", "server.js"]  # รันไฟล์ "server.js" เพื่อเริ่มแอป Node.js
 
-  phpmyadmin:  
-    image: phpmyadmin/phpmyadmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin  # ใช้ image ของ phpMyAdmin
     container_name: phpmyadmin_container
     environment:
-      PMA_HOST: db  # ชื่อ service ของ MySQL
-      PMA_PORT: 3306
+      PMA_HOST: db  # ตั้งค่าให้ phpMyAdmin เชื่อมต่อกับฐานข้อมูล MySQL ที่ชื่อ service "db"
+      PMA_PORT: 3306  # พอร์ตที่ MySQL ใช้ (ภายใน container)
     ports:
-      - "8080:80"  # เข้าถึง phpMyAdmin ที่พอร์ต 8080
+      - "8080:80"  # เชื่อมต่อพอร์ต 8080 บน host กับพอร์ต 80 ใน container สำหรับการใช้งาน phpMyAdmin
     depends_on:
-      - db
+      - db  # ขึ้นอยู่กับ container "db" เพื่อให้แน่ใจว่า MySQL รันก่อนที่จะเริ่ม phpMyAdmin
 
 volumes:
-  db_data:
+  db_data:  # สร้าง volume ชื่อ "db_data" เพื่อใช้เก็บข้อมูล MySQL
