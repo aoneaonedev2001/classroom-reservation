@@ -1,0 +1,44 @@
+services:
+  db:
+    image: mysql:9.0
+    container_name: mysql_container
+    environment:
+      MYSQL_ROOT_PASSWORD: Zx0830248638za
+      MYSQL_DATABASE: classroom-reservation-system
+    ports:
+      - "3307:3306"                      # เข้าถึง Mysql ที่พอร์ต 3307 ในเครื่อง บนhostt aws เป็น 3306
+    volumes:                             # auto Update databas in com
+      - db_data:/var/lib/mysql
+
+  app:
+    build: .
+    container_name: nodejs_container
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASS: Zx0830248638za
+      DB_DATABASE: classroom-reservation-system
+      DB_PORT: 3306
+      JWT_SECRET: jwtSecret
+      PORT: 8000
+    ports:
+      - "8000:8000"                  # เข้าถึง NodeJs ที่พอร์ต 8080
+    depends_on:
+      - db
+    volumes:                       # auto Update code
+    - .:/app   
+    command: ["node", "server.js"]  
+
+  phpmyadmin:  
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_container
+    environment:
+      PMA_HOST: db  # ชื่อ service ของ MySQL
+      PMA_PORT: 3306
+    ports:
+      - "8080:80"  # เข้าถึง phpMyAdmin ที่พอร์ต 8080
+    depends_on:
+      - db
+
+volumes:
+  db_data:
