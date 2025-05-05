@@ -1,0 +1,87 @@
+
+-- STO PROCEDURE
+DELIMITER //
+CREATE PROCEDURE `getAllSchedule`(
+  IN lect_id_db INT,
+  IN course_id_db VARCHAR(20),  
+  IN start_date DATE, 
+  IN end_date DATE,
+  IN roomtype_id_db INT,
+  IN year_db INT, -- เพิ่มพารามิเตอร์ year_db
+  IN term_db INT   -- เพิ่มพารามิเตอร์ term_db
+)
+BEGIN
+-- --------------- อาจารย์------------------------
+
+-- ข้อ 1: ดึงข้อมูลตารางสอนของอาจารย์
+  SELECT c.day, c.time
+  FROM Teach t
+  JOIN Course c ON t.course_id = c.course_id
+  WHERE t.lect_id = lect_id_db
+    AND c.Years = year_db -- ค้นหาจาก year_db
+    AND c.Term = term_db; -- ค้นหาจาก term_db
+  
+  -- ข้อ 2: ดึงข้อมูลการจองห้องของอาจารย์
+  SELECT rd.reservation_date, rd.reservation_time
+FROM Reservation r
+JOIN Reservation_detail rd ON r.reservation_id = rd.reservation_id
+WHERE r.user_id = lect_id_db
+  AND rd.reservation_date BETWEEN start_date AND end_date;
+    
+-- --------------- นักเรียน------------------------
+
+  -- ข้อ 3: ดึงข้อมูลวันว่างของนักเรียนทุกคนในคอร์สนี้ 
+  SELECT c.day, c.time
+  FROM Course c
+  WHERE (c.course_id = course_id_db)
+     OR (c.course_id IN (
+        SELECT course_id
+        FROM STD_REG_COURSE
+        WHERE std_code IN (
+           SELECT std_code
+           FROM STD_REG_COURSE
+           WHERE course_id = course_id_db
+        )
+     ))
+    AND c.Years = year_db -- ค้นหาจาก year_db
+    AND c.Term = term_db; -- ค้นหาจาก term_db
+  
+  -- ข้อ 4: ดึงข้อมูลการจองห้องเพิ่มเติมของนักเรียนทุกคนในคลาส
+  SELECT rd.reservation_date, rd.reservation_time
+FROM Reservation r
+JOIN STD_REG_COURSE sr ON r.course_id = sr.course_id
+JOIN Reservation_detail rd ON r.reservation_id = rd.reservation_id
+WHERE sr.std_code IN (
+  SELECT std_code
+  FROM STD_REG_COURSE
+  WHERE course_id = course_id_db
+) AND rd.reservation_date BETWEEN start_date AND end_date;
+  
+  -- --------------- ห้องเรียน------------------------
+  -- 5: ดึงข้อมูลห้องที่ตรงกับ roomtype_id จากฐานข้อมูล
+  SELECT room_id FROM Room WHERE roomtype_id = roomtype_id_db;
+  
+  -- 6: ข้อมูลคอร์สทั้งหมดที่ใช้ห้องตามตารางสอนปกติ
+  SELECT c.room_id, c.day, c.time
+  FROM Course c
+  WHERE c.room_id IN (
+    SELECT room_id
+    FROM Room
+    WHERE roomtype_id = roomtype_id_db
+  )
+  AND c.Years = year_db -- ค้นหาจาก year_db
+  AND c.Term = term_db; -- ค้นหาจาก term_db
+
+--  7: หาวันเวลาว่างของห้องเรียนนอกเหนือจากตารางสอนปกติของห้องที่ตรงกับ roomtype_id
+  SELECT r.room_id, rd.reservation_date, rd.reservation_time
+FROM Reservation r
+JOIN Reservation_detail rd ON r.reservation_id = rd.reservation_id
+WHERE r.room_id IN (
+  SELECT room_id
+  FROM Room
+  WHERE roomtype_id = roomtype_id_db
+) AND rd.reservation_date BETWEEN start_date AND end_date;
+  
+
+END //
+DELIMITER ;

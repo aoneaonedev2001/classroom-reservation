@@ -13,7 +13,7 @@ exports.createCalendar = async (req, res) => {
         return res.status(400).json({ error: "ปีและเทอมนี้มีอยู่แล้วในระบบ" });
       }
       const sql =
-        "INSERT INTO calendar (Years, Term, date_begin, date_end) VALUES (?, ?, ?, ?)";
+        "INSERT INTO Calendar (Years, Term, date_begin, date_end) VALUES (?, ?, ?, ?)";
       db.query(sql, [Years, Term, date_begin, date_end], (error, results) => {
         if (error) {
           return res.status(500).json({ error });
@@ -30,7 +30,7 @@ exports.createCalendar = async (req, res) => {
 
 //---Read All Calendars
 exports.readAllCalendars = async (req, res) => {
-  const sql = "SELECT * FROM calendar";
+  const sql = "SELECT * FROM Calendar";
   db.query(sql, (error, results) => {
     if (error) {
       return res.status(500).json({ error });

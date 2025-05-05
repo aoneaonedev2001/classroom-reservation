@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:9.0
+    container_name: mysql_container_classroom
+    environment:
+      MYSQL_ROOT_PASSWORD: ***REMOVED-DB-PASSWORD***
+      MYSQL_DATABASE: classroom-reservation-system
+    ports:
+      - "3308:3306"
+    volumes:
+      - db_data_classroom:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - Classroom  # กำหนดให้ db อยู่ใน network Classroom
+
+  app:
+    build: .
+    container_name: nodejs_container_classroom
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASS: ***REMOVED-DB-PASSWORD***
+      DB_DATABASE: classroom-reservation-system
+      DB_PORT: 3306
+      JWT_SECRET: jwtSecret
+      PORT: 8000
+    ports:
+      - "8001:8000"  # เปลี่ยนเป็น 8001
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    command: ["node", "server.js"]
+    networks:
+      - Classroom  # กำหนดให้ app อยู่ใน network Classroom
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_container_classroom
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    ports:
+      - "8081:80"  # เปลี่ยนเป็น 8081
+    depends_on:
+      - db
+    networks:
+      - Classroom  # กำหนดให้ phpmyadmin อยู่ใน network Classroom
+
+volumes:
+  db_data_classroom:  # สร้าง volume สำหรับเก็บข้อมูล MySQL ของ classroom
+    driver: local
+
+networks:
+  Classroom:  # สร้าง network สำหรับ container ทั้งหมดในโปรเจกต์นี้
+    driver: bridge  # ใช้ driver แบบ bridge

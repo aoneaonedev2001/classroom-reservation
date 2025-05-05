@@ -1,0 +1,104 @@
+
+CREATE TABLE Subject (
+    subj_code VARCHAR(20) PRIMARY KEY,
+    subj_name VARCHAR(50)
+);
+
+CREATE TABLE RoomType (
+    roomtype_id INT(20) AUTO_INCREMENT PRIMARY KEY,
+    roomtype_name VARCHAR(20) UNIQUE
+);
+
+
+CREATE TABLE Room (
+    room_id INT(20) PRIMARY KEY,
+    roomtype_id INT(20),
+    capacity INT(10),
+    building INT(10),
+    FOREIGN KEY (roomtype_id) REFERENCES RoomType(roomtype_id)
+);
+
+CREATE TABLE Course (
+    course_id VARCHAR(20) PRIMARY KEY,
+    subj_code VARCHAR(20),
+    room_id INT(20),
+    Years VARCHAR(11),
+    Term VARCHAR(11),
+    day VARCHAR(11),
+    time VARCHAR(11),
+    FOREIGN KEY (subj_code) REFERENCES Subject(subj_code),
+    FOREIGN KEY (room_id) REFERENCES Room(room_id)
+);
+CREATE TABLE Major (
+    major_id INT(20) PRIMARY KEY,
+    major_name VARCHAR(50)
+);
+
+CREATE TABLE Student (
+    std_code VARCHAR(20) PRIMARY KEY,
+    major_id INT(20),
+    std_name VARCHAR(50),
+    FOREIGN KEY (major_id) REFERENCES Major(major_id)
+);
+
+CREATE TABLE STD_REG_COURSE (
+    std_code VARCHAR(20),
+    course_id VARCHAR(20),
+    PRIMARY KEY (std_code, course_id),
+    FOREIGN KEY (std_code) REFERENCES Student(std_code),
+    FOREIGN KEY (course_id) REFERENCES Course(course_id)
+);
+CREATE TABLE Lecturer (
+    lect_id VARCHAR(20) PRIMARY KEY,
+    lect_name VARCHAR(50)
+);
+
+CREATE TABLE Teach (
+    lect_id VARCHAR(20),
+    course_id VARCHAR(20),
+    PRIMARY KEY (lect_id, course_id),
+    FOREIGN KEY (lect_id) REFERENCES Lecturer(lect_id),
+    FOREIGN KEY (course_id) REFERENCES Course(course_id)
+);
+CREATE TABLE Calendar (
+    Years INT(20),
+    Term INT(5),
+    date_begin DATE,
+    date_end DATE,
+    PRIMARY KEY (Years, Term)
+);
+
+
+CREATE TABLE Users (
+    user_id VARCHAR(20) PRIMARY KEY,
+    password VARCHAR(255),
+    user_name VARCHAR(50),
+    role ENUM('user', 'admin') DEFAULT 'user'
+);
+
+
+CREATE TABLE Reservation (
+    reservation_id VARCHAR(255) PRIMARY KEY,
+    user_id VARCHAR(50),
+    course_id VARCHAR(20),
+    room_id INT(20),
+    status_code VARCHAR(20),
+    Tran_dt VARCHAR(20),
+    start_date DATE,
+    end_date VARCHAR(11),  
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (course_id) REFERENCES Course(course_id),
+    FOREIGN KEY (room_id) REFERENCES Room(room_id)
+);
+
+CREATE TABLE Reservation_detail (
+    reservation_id VARCHAR(255),
+    reservation_date DATE,
+    reservation_time VARCHAR(11),
+    PRIMARY KEY (reservation_id, reservation_date, reservation_time), 
+    FOREIGN KEY (reservation_id) REFERENCES Reservation(reservation_id)
+);
+
+
+
+

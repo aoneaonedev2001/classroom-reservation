@@ -27,7 +27,7 @@ exports.adminCheck = (req, res, next) => {
     const { userId } = req.user; // get the username from the user object in request
 
     // Prepare the SQL statement
-    const sql = "SELECT * FROM users WHERE user_id = ?";
+    const sql = "SELECT * FROM Users WHERE user_id = ?";
 
     // Execute the SQL statement
     db.query(sql, [userId], (error, results) => {

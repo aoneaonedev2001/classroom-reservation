@@ -2,7 +2,7 @@ const db = require('../db');
 
 exports.createStudent = async (req, res) => {
     const { std_code, major_id, std_name } = req.body;
-    const sql = "INSERT INTO student (std_code, major_id, std_name) VALUES (?, ?, ?)";
+    const sql = "INSERT INTO Student (std_code, major_id, std_name) VALUES (?, ?, ?)";
     db.query(sql, [std_code, major_id, std_name], (error, results) => {
         if (error) {
             return res.status(500).json({ error });
@@ -12,7 +12,7 @@ exports.createStudent = async (req, res) => {
 };
 
 exports.readAllStudent = async (req, res) => {
-    const sql = "SELECT s.std_code, s.major_id, s.std_name, m.major_name FROM student s LEFT JOIN major m ON s.major_id = m.major_id";
+    const sql = "SELECT s.std_code, s.major_id, s.std_name, m.major_name FROM Student s LEFT JOIN Major m ON s.major_id = m.major_id";
     db.query(sql, (error, results) => {
         if (error) {
             return res.status(500).json({ error });
@@ -26,7 +26,7 @@ exports.readAllStudent = async (req, res) => {
 
 exports.readStudent = async (req, res) => {
     const { id } = req.params;
-    const sql = "SELECT std_code, major_id, std_name FROM student WHERE std_code = ?";
+    const sql = "SELECT std_code, major_id, std_name FROM Student WHERE std_code = ?";
     db.query(sql, id, (error, results) => {
         if (error) {
             return res.status(500).json({ error });
@@ -41,7 +41,7 @@ exports.readStudent = async (req, res) => {
 exports.updateStudent = async (req, res) => {
     const { id } = req.params;
     const { major_id, std_name } = req.body;
-    const sql = "UPDATE student SET major_id = ?, std_name = ? WHERE std_code = ?";
+    const sql = "UPDATE Student SET major_id = ?, std_name = ? WHERE std_code = ?";
     db.query(sql, [major_id, std_name, id], (error, results) => {
         if (error) {
             return res.status(500).json({ error });
@@ -52,7 +52,7 @@ exports.updateStudent = async (req, res) => {
 
 exports.deleteStudent = async (req, res) => {
     const { id } = req.params;
-    const sql = "DELETE FROM student WHERE std_code = ?";
+    const sql = "DELETE FROM Student WHERE std_code = ?";
     db.query(sql, id, (error, results) => {
         if (error) {
             return res.status(500).json({ error });

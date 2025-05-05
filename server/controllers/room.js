@@ -4,7 +4,7 @@ const db = require('../db');
 //----createRoom
 exports.createRoom = async (req, res) => {
   const { room_id, roomtype_id, capacity, building } = req.body;
-  const checkSql="SELECT * FROM room WHERE room_id = ?"
+  const checkSql="SELECT * FROM Room WHERE room_id = ?"
   
   db.query(checkSql, [room_id], (error, results) => {
     if (error) {
@@ -13,7 +13,7 @@ exports.createRoom = async (req, res) => {
     if (results.length > 0) {
         return res.status(400).json({ error: "ห้องนี้มีอยู่ในระบบเเล้ว" });
     }
-    const sql = "INSERT INTO room (room_id, roomtype_id, capacity, building) VALUES (?, ?, ?, ?)";
+    const sql = "INSERT INTO Room (room_id, roomtype_id, capacity, building) VALUES (?, ?, ?, ?)";
     db.query(sql, [room_id, roomtype_id, capacity, building], (error, results) => {
         if (error) {
             return res.status(500).json({ error });
@@ -27,7 +27,7 @@ exports.createRoom = async (req, res) => {
 
 //---Read All Rooms with Room Type
 exports.readAllRoom = async (req, res) => {
-    const sql = "SELECT room.*, roomtype.roomtype_name FROM room JOIN roomtype ON room.roomtype_id = roomtype.roomtype_id";
+    const sql = "SELECT Room.*, RoomType.roomtype_name FROM Room JOIN RoomType ON Room.roomtype_id = RoomType.roomtype_id";
     db.query(sql, (error, results) => {
         if (error) {
             return res.status(500).json({ error });
@@ -41,7 +41,7 @@ exports.readAllRoom = async (req, res) => {
 //----readRoom
 exports.readRoom = async (req, res) => {
   const { id } = req.params;
-  const sql = "SELECT * FROM room WHERE room_id = ?";
+  const sql = "SELECT * FROM Room WHERE room_id = ?";
   db.query(sql, id, (error, results) => {
       if (error) {
           return res.status(500).json({ error });
@@ -57,7 +57,7 @@ exports.readRoom = async (req, res) => {
 //----readAllRoomBYType_id
 exports.readAllRoomByRoomType_id = async (req, res) => {
     const { id } = req.params;
-    const sql = "SELECT * FROM room WHERE roomtype_id = ?";
+    const sql = "SELECT * FROM Room WHERE roomtype_id = ?";
     db.query(sql, id, (error, results) => {
         if (error) {
             return res.status(500).json({ error });
@@ -74,7 +74,7 @@ exports.readAllRoomByRoomType_id = async (req, res) => {
 //----deleteRoom
 exports.deleteRoom = async (req, res) => {
   const { id } = req.params;
-  const sql = "DELETE FROM room WHERE room_id = ?";
+  const sql = "DELETE FROM Room WHERE room_id = ?";
   db.query(sql, id, (error, results) => {
       if (error) {
           return res.status(500).json({ error });
@@ -88,7 +88,7 @@ exports.deleteRoom = async (req, res) => {
 exports.updateRoom = async (req, res) => {
   const { id } = req.params;
   const { roomtype_id, capacity, building } = req.body;
-  const sql = "UPDATE room SET roomtype_id = ?, capacity = ?, building = ? WHERE room_id = ?";
+  const sql = "UPDATE Room SET roomtype_id = ?, capacity = ?, building = ? WHERE room_id = ?";
   db.query(sql, [roomtype_id, capacity, building, id], (error, results) => {
       if (error) {
           return res.status(500).json({ error });
@@ -104,7 +104,7 @@ exports.updateRoom = async (req, res) => {
 exports.createRoomType = (req, res) => {
     const { roomtype_name } = req.body;
     try {
-        const checkSql = "SELECT * FROM roomtype WHERE roomtype_name = ?";
+        const checkSql = "SELECT * FROM RoomType WHERE roomtype_name = ?";
         db.query(checkSql, [roomtype_name], (error, results) => {
             if (error) {
                 return res.status(500).json({ error: "An error occurred while creating room type." });
@@ -112,7 +112,7 @@ exports.createRoomType = (req, res) => {
             if (results.length > 0) {
                 return res.status(400).json({ error: "มีชื่อชนิดห้องนี้อยู่ในระบบเเล้ว โปรดใช้ชื่อชนิดห้องอื่น" });
             }
-            const insertSql = "INSERT INTO roomtype (roomtype_name) VALUES (?)";
+            const insertSql = "INSERT INTO RoomType (roomtype_name) VALUES (?)";
             db.query(insertSql, [roomtype_name], (error, results) => {
                 if (error) {
                     return res.status(500).json({ error: "An error occurred while creating room type." });
@@ -129,7 +129,7 @@ exports.createRoomType = (req, res) => {
 
 //----readAllRoomType
 exports.readAllRoomType = async (req, res) => {
-  const sql = "SELECT * FROM roomtype";
+  const sql = "SELECT * FROM RoomType";
   db.query(sql, (error, results) => {
       if (error) {
           return res.status(500).json({ error });
@@ -141,7 +141,7 @@ exports.readAllRoomType = async (req, res) => {
 //----readRoomType
 exports.readRoomType = async (req, res) => {
   const { id } = req.params;
-  const sql = "SELECT * FROM roomtype WHERE roomtype_id = ?";
+  const sql = "SELECT * FROM RoomType WHERE roomtype_id = ?";
   db.query(sql, id, (error, results) => {
       if (error) {
           return res.status(500).json({ error });
@@ -158,7 +158,7 @@ exports.updateRoomType = async (req, res) => {
     const { id } = req.params;
     const { roomtype_name } = req.body;
   try {
-    const checkSql = "SELECT * FROM roomtype WHERE roomtype_name = ?";
+    const checkSql = "SELECT * FROM RoomType WHERE roomtype_name = ?";
     
     db.query(checkSql, [roomtype_name], (error, results) => {
         if (error) {
@@ -167,7 +167,7 @@ exports.updateRoomType = async (req, res) => {
         if (results.length > 0) {
             return res.status(400).json({ error: "มีชื่อชนิดห้องนี้อยู่ในระบบเเล้ว โปรดใช้ชื่อชนิดห้องอื่น" });
         }
-        const updateSql = "UPDATE roomtype SET roomtype_name = ? WHERE roomtype_id = ?";
+        const updateSql = "UPDATE RoomType SET roomtype_name = ? WHERE roomtype_id = ?";
         db.query(updateSql, [roomtype_name, id], (error, results) => {
             if (error) {
                 return res.status(500).json({ error });
@@ -193,7 +193,7 @@ exports.updateRoomType = async (req, res) => {
 //----deleteRoomType
 exports.deleteRoomType = async (req, res) => {
   const { id } = req.params;
-  const sql = "DELETE FROM roomtype WHERE roomtype_id = ?";
+  const sql = "DELETE FROM RoomType WHERE roomtype_id = ?";
   db.query(sql, id, (error, results) => {
       if (error) {
           return res.status(500).json({ error });

@@ -26,6 +26,7 @@ exports.findAvailableTimeSlots = async (req, res) => {
         year_db,
         term_db
       ]);
+       //console.log(results);
        
  //2: set data ข้อมูลที่ได้จาก database ลงตัวเเปร
     const teachRows = results[0];              // ข้อมูลตารางสอนปกติของอาจารย์
@@ -363,9 +364,9 @@ db.query(sql,[room_id, Year, Term],(error, results) =>{
       FROM Reservation r
       JOIN Reservation_detail rd ON r.reservation_id = rd.reservation_id
       JOIN Course c ON r.course_id = c.course_id
-      JOIN users u ON r.user_id = u.user_id
+      JOIN Users u ON r.user_id = u.user_id
       JOIN Subject s ON c.subj_code = s.subj_code
-      JOIN room ro ON c.room_id = ro.room_id
+      JOIN Room ro ON c.room_id = ro.room_id
       WHERE c.Years = ? AND c.Term = ?
     `;
   
@@ -388,8 +389,8 @@ exports.readAllReservation = async (req, res) => {
   JOIN Reservation_detail rd ON r.reservation_id = rd.reservation_id
   JOIN Course c ON r.course_id = c.course_id
   JOIN Subject s ON c.subj_code = s.subj_code
-  JOIN users u ON r.user_id = u.user_id
-  JOIN room ro ON c.room_id = ro.room_id
+  JOIN Users u ON r.user_id = u.user_id
+  JOIN Room ro ON c.room_id = ro.room_id
   `;
   db.query(sql, (error, results) => {
     if (error) {

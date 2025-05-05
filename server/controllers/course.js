@@ -3,7 +3,7 @@ const db = require("../db");
 //----readAllCourse
 exports.readAllCourse = async (req, res) => {
   const sql =
-    "SELECT course.*, Subject.subj_name, Lecturer.lect_name FROM course LEFT JOIN Subject ON course.subj_code = Subject.subj_code LEFT JOIN Teach ON course.course_id = Teach.course_id LEFT JOIN Lecturer ON Teach.lect_id = Lecturer.lect_id";
+    "SELECT Course.*, Subject.subj_name, Lecturer.lect_name FROM Course LEFT JOIN Subject ON Course.subj_code = Subject.subj_code LEFT JOIN Teach ON Course.course_id = Teach.course_id LEFT JOIN Lecturer ON Teach.lect_id = Lecturer.lect_id";
   db.query(sql, (error, results) => {
     if (error) {
       return res.status(500).json({ error });
@@ -15,7 +15,7 @@ exports.readAllCourse = async (req, res) => {
 //----readCourse
 exports.readCourse = async (req, res) => {
   const course_id = req.params.id;
-  const sql = "SELECT * FROM course WHERE course_id=?";
+  const sql = "SELECT * FROM Course WHERE course_id=?";
   db.query(sql, course_id, (error, results) => {
     if (error) {
       return res.status(500).json({ error });
@@ -29,7 +29,7 @@ exports.readCoursesByLecturer = async (req, res) => {
   const { lect_id, years, term } = req.body;
   const sql = `
     SELECT c.course_id, c.subj_code, s.subj_name, c.room_id 
-    FROM course c
+    FROM Course c
     JOIN Teach t ON c.course_id = t.course_id
     JOIN Subject s ON c.subj_code = s.subj_code
     WHERE t.lect_id = ? AND c.Years = ? AND c.Term = ?
@@ -45,12 +45,12 @@ exports.readCoursesByLecturer = async (req, res) => {
 exports.readCoursesByYearTerm = async (req, res) => {
   const { years, term } = req.body;
   const sql = `
-  SELECT course.*, Subject.subj_name, Lecturer.lect_name 
-  FROM course 
-  LEFT JOIN Subject ON course.subj_code = Subject.subj_code 
-  LEFT JOIN Teach ON course.course_id = Teach.course_id 
+  SELECT Course.*, Subject.subj_name, Lecturer.lect_name 
+  FROM Course 
+  LEFT JOIN Subject ON Course.subj_code = Subject.subj_code 
+  LEFT JOIN Teach ON Course.course_id = Teach.course_id 
   LEFT JOIN Lecturer ON Teach.lect_id = Lecturer.lect_id
-  WHERE  course.Years = ? AND course.Term = ?
+  WHERE  Course.Years = ? AND Course.Term = ?
   `;
   db.query(sql, [years, term], (error, results) => {
     if (error) {
@@ -66,7 +66,7 @@ exports.readCoursesByLecturerAndDate = async (req, res) => {
   const { lect_id, date } = req.body;
   const sql = `
   SELECT c.course_id, c.subj_code, s.subj_name, c.room_id, cal.Years, cal.Term
-  FROM course c
+  FROM Course c
   JOIN Teach t ON c.course_id = t.course_id
   JOIN Subject s ON c.subj_code = s.subj_code
   JOIN (
@@ -90,7 +90,7 @@ exports.deleteCourse = async (req, res) => {
 
   // First, delete the course from the std_reg_course table
   db.query(
-    "DELETE FROM std_reg_course WHERE course_id = ?",
+    "DELETE FROM STD_REG_COURSE WHERE course_id = ?",
     [course_id],
     (error, results) => {
       if (error) {
@@ -101,7 +101,7 @@ exports.deleteCourse = async (req, res) => {
 
   // Then, delete the course from the teach table
   db.query(
-    "DELETE FROM teach WHERE course_id = ?",
+    "DELETE FROM Teach WHERE course_id = ?",
     [course_id],
     (error, results) => {
       if (error) {
@@ -112,7 +112,7 @@ exports.deleteCourse = async (req, res) => {
 
   // Finally, delete the course from the course table
   db.query(
-    "DELETE FROM course WHERE course_id = ?",
+    "DELETE FROM Course WHERE course_id = ?",
     [course_id],
     (error, results) => {
       if (error) {
@@ -127,7 +127,7 @@ exports.deleteCourse = async (req, res) => {
       message:
         "Courses for course_id " +
         course_id +
-        " have been deleted successfully from std_reg_course, teach and course tables.",
+        " have been deleted successfully from STD_REG_COURSE, teach and course tables.",
     });
 };
 
@@ -136,7 +136,7 @@ exports.updateCourse = async (req, res) => {
   const { id } = req.params; //id = course_id
   const { subj_code, room_id, Years, Term, day, time } = req.body;
   const sql =
-    "UPDATE course SET subj_code = ?, room_id = ?, Years = ?, Term = ?, day = ?, time = ? WHERE course_id = ?";
+    "UPDATE Course SET subj_code = ?, room_id = ?, Years = ?, Term = ?, day = ?, time = ? WHERE course_id = ?";
   db.query(
     sql,
     [subj_code, room_id, Years, Term, day, time, id],

@@ -7,7 +7,7 @@ exports.register = async (req, res) => {
   const { user_id, password, user_name, role = "user" } = req.body;
 
   db.query(
-    "SELECT * FROM users WHERE user_id = ?",
+    "SELECT * FROM Users WHERE user_id = ?",
     [user_id],
     async (error, results) => {
       if (error) {
@@ -40,7 +40,7 @@ exports.login = async (req, res) => {
 
   // คิวรีแรกสำหรับการรับข้อมูลจากตาราง users
   db.query(
-    "SELECT * FROM users WHERE user_id = ?",
+    "SELECT * FROM Users WHERE user_id = ?",
     [username],
     async (error, results) => {
       if (error) {
@@ -85,7 +85,7 @@ exports.currentUser = async (req, res) => {
     const userId = req.user.userId; //req.user เป็นuserที่ผ่านการ decoded หรือ verify เเล้ว เอามาจาก middlewere เป็นตัวเเปลที่สร้างไว้
 
     // We prepare the SQL statement
-    const sql = "SELECT * FROM users WHERE user_id = ?";
+    const sql = "SELECT * FROM Users WHERE user_id = ?";
 
     // We execute the SQL statement
     db.query(sql, [userId], (error, results) => {

@@ -3,7 +3,7 @@ const db = require('../db');
 //----createSubject
 exports.createSubject = async (req, res) => {
     const { subj_code, subj_name } = req.body;
-    const sql = 'INSERT INTO subject (subj_code, subj_name) VALUES (?, ?)';
+    const sql = 'INSERT INTO Subject (subj_code, subj_name) VALUES (?, ?)';
     db.query(sql, [subj_code, subj_name], (error, results) => {
       if (error) {
         return res.status(500).json({ error });
@@ -15,7 +15,7 @@ exports.createSubject = async (req, res) => {
 
   //----readAllSubjects
   exports.readAllSubjects = async (req, res) => {
-    const sql = 'SELECT * FROM subject';
+    const sql = 'SELECT * FROM Subject';
     db.query(sql, (error, results) => {
       if (error) {
         return res.status(500).json({ error });
@@ -28,7 +28,7 @@ exports.createSubject = async (req, res) => {
   //----readSubject
   exports.readSubject = async (req, res) => {
     const subj_code = req.params.id;
-    const sql = 'SELECT * FROM subject WHERE subj_code = ?';
+    const sql = 'SELECT * FROM Subject WHERE subj_code = ?';
     db.query(sql, [subj_code], (error, results) => {
       if (error) {
         return res.status(500).json({ error });
@@ -45,7 +45,7 @@ exports.createSubject = async (req, res) => {
   exports.updateSubject = async (req, res) => {
     const { subj_name } = req.body;
     const subj_code = req.params.id;
-    const sql = 'UPDATE subject SET subj_name = ? WHERE subj_code = ?';
+    const sql = 'UPDATE Subject SET subj_name = ? WHERE subj_code = ?';
     db.query(sql, [subj_name, subj_code], (error, results) => {
       if (error) {
         return res.status(500).json({ error });
@@ -61,7 +61,7 @@ exports.createSubject = async (req, res) => {
   //----deleteSubject
   exports.deleteSubject = async (req, res) => {
     const subj_code = req.params.id;
-    const sql = 'DELETE FROM subject WHERE subj_code = ?';
+    const sql = 'DELETE FROM Subject WHERE subj_code = ?';
     db.query(sql, [subj_code], (error, results) => {
       if (error) {
         return res.status(500).json({ error });
