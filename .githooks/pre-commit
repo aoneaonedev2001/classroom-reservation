@@ -1,0 +1,41 @@
+#!/bin/sh
+# Blocks commits that contain likely secrets (API keys, tokens, private keys)
+# or that add tracked .env-style files.
+
+staged_files=$(git diff --cached --name-only --diff-filter=ACM)
+
+fail=0
+
+for f in $staged_files; do
+    case "$f" in
+        .env|.env.*|*/.env|*/.env.*)
+            case "$f" in
+                *.env.example|*.env.*.example|*.env.sample)
+                    ;;
+                *)
+                    echo "BLOCKED: '$f' looks like an env file with real secrets. Do not commit it (it should be in .gitignore)."
+                    fail=1
+                    ;;
+            esac
+            ;;
+    esac
+done
+
+pattern='sk-proj-[A-Za-z0-9_-]{20,}|sk-[A-Za-z0-9]{20,}|AIzaSy[A-Za-z0-9_-]{33}|ghp_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{20,}|xox[baprs]-[A-Za-z0-9-]+|AKIA[A-Z0-9]{16}|-----BEGIN (RSA|EC|OPENSSH|PGP|DSA) PRIVATE KEY-----'
+
+matches=$(git diff --cached -U0 -- . ':(exclude)*.lock' ':(exclude)package-lock.json' | grep -E '^\+' | grep -Ev '^\+\+\+' | grep -E "$pattern")
+
+if [ -n "$matches" ]; then
+    echo "BLOCKED: commit appears to contain a secret/API key/token:"
+    echo "$matches" | sed 's/^/  /'
+    fail=1
+fi
+
+if [ "$fail" -eq 1 ]; then
+    echo ""
+    echo "Commit aborted. Remove the secret, use environment variables / .env (gitignored), and try again."
+    echo "If this is a false positive, use 'git commit --no-verify' deliberately."
+    exit 1
+fi
+
+exit 0
